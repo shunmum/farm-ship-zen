@@ -1,7 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSampleData } from "@/hooks/useSampleData";
-import { TrendingUp, Package, Users, RotateCcw } from "lucide-react";
-import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { TrendingUp, Package, Users, RotateCcw, ArrowUpRight } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Badge } from "@/components/ui/badge";
 
 const DashboardPage = () => {
@@ -16,23 +16,24 @@ const DashboardPage = () => {
   const newCustomers = customers.filter(
     (c) => new Date(c.lastPurchaseDate).getMonth() === new Date().getMonth()
   ).length;
-  const repeatRate = ((thisMonthOrders.length / customers.length) * 100).toFixed(1);
+  const avgPrice = totalSales / thisMonthOrders.length || 0;
 
   const monthlySales = [
-    { month: "10月", sales: 450000 },
-    { month: "11月", sales: 520000 },
-    { month: "12月", sales: 680000 },
+    { month: "8月", sales: 945000 },
+    { month: "9月", sales: 1120000 },
+    { month: "10月", sales: 1050000 },
+    { month: "11月", sales: 1280000 },
+    { month: "12月", sales: 1450000 },
     { month: "1月", sales: totalSales },
   ];
 
-  const productSales = [
-    { name: "米", value: 35 },
-    { name: "果物", value: 30 },
-    { name: "野菜", value: 25 },
-    { name: "その他", value: 10 },
+  const topProducts = [
+    { name: "トマト", sales: 45 },
+    { name: "きゅうり", sales: 38 },
+    { name: "いちご", sales: 32 },
+    { name: "じゃがいも", sales: 28 },
+    { name: "玉ねぎ", sales: 25 },
   ];
-
-  const COLORS = ["#10B981", "#3B82F6", "#F59E0B", "#EF4444"];
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
@@ -44,113 +45,124 @@ const DashboardPage = () => {
     return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
 
+  const kpiCards = [
+    {
+      title: "今月の売上",
+      value: `¥${totalSales.toLocaleString()}`,
+      change: "+12%",
+      subtitle: "前月比",
+      icon: TrendingUp,
+      bgColor: "from-green-500/10 to-emerald-500/10",
+      iconColor: "text-primary",
+    },
+    {
+      title: "配送完了",
+      value: `${deliveryCount}件`,
+      change: "本日: 12件",
+      subtitle: "",
+      icon: Package,
+      bgColor: "from-blue-500/10 to-cyan-500/10",
+      iconColor: "text-blue-600",
+    },
+    {
+      title: "新規顧客",
+      value: `${newCustomers}名`,
+      change: "+8%",
+      subtitle: "前月比",
+      icon: Users,
+      bgColor: "from-purple-500/10 to-pink-500/10",
+      iconColor: "text-purple-600",
+    },
+    {
+      title: "平均単価",
+      value: `¥${Math.round(avgPrice).toLocaleString()}`,
+      change: "+3%",
+      subtitle: "前月比",
+      icon: RotateCcw,
+      bgColor: "from-orange-500/10 to-amber-500/10",
+      iconColor: "text-orange-600",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="mx-auto max-w-7xl space-y-6">
+    <div className="min-h-screen bg-background p-8 fade-in">
+      <div className="mx-auto max-w-7xl space-y-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">ダッシュボード</h1>
-          <p className="text-muted-foreground">配送業務の概要</p>
+          <p className="text-muted-foreground">やまだ農園の配送業務概要</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">今月の売上</CardTitle>
-              <TrendingUp className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">¥{totalSales.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">前月比 +12.5%</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">今月の配送数</CardTitle>
-              <Package className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{deliveryCount}件</div>
-              <p className="text-xs text-muted-foreground">前月比 +8.2%</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">新規顧客数</CardTitle>
-              <Users className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{newCustomers}名</div>
-              <p className="text-xs text-muted-foreground">前月比 +15.3%</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">リピート率</CardTitle>
-              <RotateCcw className="h-4 w-4 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{repeatRate}%</div>
-              <p className="text-xs text-muted-foreground">前月比 +2.1%</p>
-            </CardContent>
-          </Card>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {kpiCards.map((card, index) => (
+            <Card key={index} className="card-hover overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {card.title}
+                </CardTitle>
+                <div className={`rounded-xl bg-gradient-to-br ${card.bgColor} p-2.5`}>
+                  <card.icon className={`h-5 w-5 ${card.iconColor}`} />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">{card.value}</div>
+                <div className="mt-2 flex items-center gap-1 text-sm">
+                  <ArrowUpRight className="h-4 w-4 text-green-600" />
+                  <span className="text-green-600">{card.change}</span>
+                  {card.subtitle && <span className="text-muted-foreground">{card.subtitle}</span>}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card className="card-hover">
             <CardHeader>
               <CardTitle>月別売上推移</CardTitle>
-              <CardDescription>過去4ヶ月の売上トレンド</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={monthlySales}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="sales" stroke="#10B981" strokeWidth={2} name="売上" />
-                </LineChart>
+                <BarChart data={monthlySales}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="month" stroke="#6b7280" />
+                  <YAxis stroke="#6b7280" />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+                  />
+                  <Bar dataKey="sales" fill="#10B981" radius={[8, 8, 0, 0]} name="売上" />
+                </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="card-hover">
             <CardHeader>
-              <CardTitle>商品別売上構成</CardTitle>
-              <CardDescription>カテゴリー別の売上比率</CardDescription>
+              <CardTitle>人気商品 TOP 5</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={productSales}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {productSales.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="space-y-4">
+                {topProducts.map((product, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium">{product.name}</span>
+                      <span className="text-muted-foreground">{product.sales}個</span>
+                    </div>
+                    <div className="h-2 overflow-hidden rounded-full bg-secondary">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all"
+                        style={{ width: `${(product.sales / topProducts[0].sales) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        <Card>
+        <Card className="card-hover">
           <CardHeader>
             <CardTitle>最近の配送</CardTitle>
-            <CardDescription>直近の配送状況</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -166,14 +178,14 @@ const DashboardPage = () => {
                 </thead>
                 <tbody>
                   {orders.slice(0, 8).map((order) => (
-                    <tr key={order.id} className="border-b text-sm">
-                      <td className="py-3">{order.deliveryDate}</td>
-                      <td className="py-3">{order.customerName}</td>
-                      <td className="py-3">
+                    <tr key={order.id} className="border-b text-sm transition-colors hover:bg-muted/50">
+                      <td className="py-4">{order.deliveryDate}</td>
+                      <td className="py-4 font-medium">{order.customerName}</td>
+                      <td className="py-4">
                         {order.products.map((p) => p.productName).join(", ")}
                       </td>
-                      <td className="py-3">¥{order.amount.toLocaleString()}</td>
-                      <td className="py-3">{getStatusBadge(order.status)}</td>
+                      <td className="py-4 font-semibold">¥{order.amount.toLocaleString()}</td>
+                      <td className="py-4">{getStatusBadge(order.status)}</td>
                     </tr>
                   ))}
                 </tbody>

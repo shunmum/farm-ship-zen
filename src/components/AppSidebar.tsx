@@ -1,17 +1,7 @@
-import { Home, Users, ShoppingCart, Printer, Truck, Settings } from "lucide-react";
+import { Home, Users, ShoppingCart, Printer, Truck, Settings, Tractor } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarHeader,
-} from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const menuItems = [
   { title: "ダッシュボード", url: "/", icon: Home },
@@ -24,48 +14,42 @@ const menuItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar className="border-r border-sidebar-border">
-      <SidebarHeader className="border-b border-sidebar-border p-6">
-        <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <Truck className="h-6 w-6 text-primary-foreground" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold text-sidebar-foreground">FarmShip</h2>
-            <p className="text-xs text-muted-foreground">配送管理システム</p>
+    <div className="fixed left-0 top-0 h-screen w-20 bg-gradient-to-b from-[#047857] to-[#065F46] shadow-xl">
+      <TooltipProvider delayDuration={0}>
+        {/* Logo */}
+        <div className="flex h-20 items-center justify-center border-b border-white/10">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+            <Tractor className="h-7 w-7 text-white" />
           </div>
         </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>メニュー</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      end
-                      className={({ isActive }) =>
-                        cn(
-                          "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                          isActive
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                            : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-                        )
-                      }
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+
+        {/* Menu Items */}
+        <nav className="flex flex-col items-center gap-2 p-3">
+          {menuItems.map((item) => (
+            <Tooltip key={item.title}>
+              <TooltipTrigger asChild>
+                <NavLink
+                  to={item.url}
+                  end
+                  className={({ isActive }) =>
+                    cn(
+                      "flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-200",
+                      isActive
+                        ? "bg-white text-primary shadow-lg scale-105"
+                        : "text-white hover:bg-white/10 hover:scale-105"
+                    )
+                  }
+                >
+                  <item.icon className="h-6 w-6" />
+                </NavLink>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>{item.title}</p>
+              </TooltipContent>
+            </Tooltip>
+          ))}
+        </nav>
+      </TooltipProvider>
+    </div>
   );
 }

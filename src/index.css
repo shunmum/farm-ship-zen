@@ -2,79 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* FarmShip Design System - Modern SaaS UI */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 142 10% 10%;
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 142 10% 10%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 142 10% 10%;
+    --popover-foreground: 222 47% 11%;
     --primary: 142 76% 36%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 142 30% 96%;
-    --secondary-foreground: 142 10% 10%;
-    --muted: 142 30% 96%;
-    --muted-foreground: 142 10% 45%;
+    --secondary: 210 16% 93%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 16% 96%;
+    --muted-foreground: 215 16% 47%;
     --accent: 142 76% 45%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 142 30% 90%;
-    --input: 142 30% 90%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
     --ring: 142 76% 36%;
+    --radius: 0.75rem;
+    
+    /* Sidebar gradient colors */
+    --sidebar-background: 160 84% 24%;
+    --sidebar-background-end: 160 77% 20%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 142 76% 36%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 160 70% 30%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 160 50% 30%;
+    --sidebar-ring: 142 76% 36%;
+    
+    /* Chart colors */
     --chart-1: 142 76% 36%;
     --chart-2: 173 80% 40%;
     --chart-3: 197 37% 60%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.75rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 142 10% 20%;
-    --sidebar-primary: 142 76% 36%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 142 30% 92%;
-    --sidebar-accent-foreground: 142 10% 20%;
-    --sidebar-border: 142 30% 88%;
-    --sidebar-ring: 142 76% 36%;
   }
 
   .dark {
-    --background: 142 15% 8%;
-    --foreground: 142 10% 95%;
-    --card: 142 15% 10%;
-    --card-foreground: 142 10% 95%;
-    --popover: 142 15% 8%;
-    --popover-foreground: 142 10% 95%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
     --primary: 142 76% 36%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 142 15% 15%;
-    --secondary-foreground: 142 10% 95%;
-    --muted: 142 15% 15%;
-    --muted-foreground: 142 10% 60%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
     --accent: 142 76% 45%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 142 15% 20%;
-    --input: 142 15% 20%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
     --ring: 142 76% 36%;
-    --chart-1: 142 76% 45%;
-    --chart-2: 173 80% 50%;
-    --chart-3: 197 37% 70%;
-    --chart-4: 43 74% 76%;
-    --chart-5: 27 87% 77%;
-    --sidebar-background: 142 15% 10%;
-    --sidebar-foreground: 142 10% 80%;
+    
+    --sidebar-background: 160 84% 24%;
+    --sidebar-background-end: 160 77% 20%;
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 142 76% 36%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 142 15% 18%;
-    --sidebar-accent-foreground: 142 10% 80%;
-    --sidebar-border: 142 15% 18%;
+    --sidebar-accent: 160 70% 30%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 160 50% 30%;
     --sidebar-ring: 142 76% 36%;
   }
 }
@@ -85,6 +85,31 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .btn-hover {
+    @apply transition-all duration-150 active:scale-95;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
