@@ -14,7 +14,189 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      customers: {
+        Row: {
+          address: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone: string
+          postal_code: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          phone: string
+          postal_code: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string
+          postal_code?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          name: string
+          price: number
+          size_cm: number | null
+          updated_at: string
+          user_id: string | null
+          weight_kg: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          name: string
+          price: number
+          size_cm?: number | null
+          updated_at?: string
+          user_id?: string | null
+          weight_kg?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          name?: string
+          price?: number
+          size_cm?: number | null
+          updated_at?: string
+          user_id?: string | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string
+          created_at: string
+          farm_name: string
+          id: string
+          phone: string
+          postal_code: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          farm_name: string
+          id?: string
+          phone: string
+          postal_code: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          farm_name?: string
+          id?: string
+          phone?: string
+          postal_code?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      shipping_labels: {
+        Row: {
+          created_at: string
+          customer_id: string
+          delivery_date: string | null
+          id: string
+          notes: string | null
+          product_id: string | null
+          product_name: string | null
+          quantity: number
+          service_type: string
+          shipping_company: string
+          shipping_cost: number
+          shipping_date: string
+          size_cm: number | null
+          status: string
+          tracking_number: string | null
+          updated_at: string
+          user_id: string | null
+          weight_kg: number | null
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          quantity?: number
+          service_type: string
+          shipping_company: string
+          shipping_cost: number
+          shipping_date: string
+          size_cm?: number | null
+          status?: string
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+          weight_kg?: number | null
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          quantity?: number
+          service_type?: string
+          shipping_company?: string
+          shipping_cost?: number
+          shipping_date?: string
+          size_cm?: number | null
+          status?: string
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string | null
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipping_labels_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shipping_labels_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
