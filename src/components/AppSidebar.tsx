@@ -1,7 +1,6 @@
 import { Home, Users, ShoppingCart, Printer, Truck, Settings, Tractor, FileText, LogOut } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
@@ -23,61 +22,54 @@ export function AppSidebar() {
   };
 
   return (
-    <div className="fixed left-0 top-0 h-screen w-20 bg-gradient-to-b from-[#047857] to-[#065F46] shadow-xl flex flex-col">
-      <TooltipProvider delayDuration={0}>
-        {/* Logo */}
-        <div className="flex h-20 items-center justify-center border-b border-white/10">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
-            <Tractor className="h-7 w-7 text-white" />
-          </div>
+    <div className="group fixed left-0 top-0 h-screen w-16 hover:w-60 bg-gradient-to-b from-[#047857] to-[#065F46] shadow-xl flex flex-col transition-all duration-300 z-50">
+      {/* Logo */}
+      <div className="flex h-16 items-center px-3 border-b border-white/10">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm flex-shrink-0">
+          <Tractor className="h-6 w-6 text-white" />
         </div>
+        <span className="ml-3 text-white font-semibold text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+          FarmShip
+        </span>
+      </div>
 
-        {/* Menu Items */}
-        <nav className="flex flex-col items-center gap-2 p-3 flex-1">
-          {menuItems.map((item) => (
-            <Tooltip key={item.title}>
-              <TooltipTrigger asChild>
-                <NavLink
-                  to={item.url}
-                  end
-                  className={({ isActive }) =>
-                    cn(
-                      "flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-200",
-                      isActive
-                        ? "bg-white text-primary shadow-lg scale-105"
-                        : "text-white hover:bg-white/10 hover:scale-105"
-                    )
-                  }
-                >
-                  <item.icon className="h-6 w-6" />
-                </NavLink>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{item.title}</p>
-              </TooltipContent>
-            </Tooltip>
-          ))}
-        </nav>
+      {/* Menu Items */}
+      <nav className="flex flex-col gap-1 p-2 flex-1">
+        {menuItems.map((item) => (
+          <NavLink
+            key={item.title}
+            to={item.url}
+            end
+            className={({ isActive }) =>
+              cn(
+                "flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200",
+                isActive
+                  ? "bg-white text-primary shadow-lg"
+                  : "text-white hover:bg-white/10"
+              )
+            }
+          >
+            <item.icon className="h-5 w-5 flex-shrink-0" />
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap text-sm font-medium">
+              {item.title}
+            </span>
+          </NavLink>
+        ))}
+      </nav>
 
-        {/* Logout Button */}
-        <div className="p-3 border-t border-white/10">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleLogout}
-                className="h-14 w-14 text-white hover:bg-white/10 hover:text-white rounded-xl"
-              >
-                <LogOut className="h-6 w-6" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>ログアウト</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      </TooltipProvider>
+      {/* Logout Button */}
+      <div className="p-2 border-t border-white/10">
+        <Button
+          variant="ghost"
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-3 py-3 text-white hover:bg-white/10 hover:text-white rounded-lg justify-start"
+        >
+          <LogOut className="h-5 w-5 flex-shrink-0" />
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap text-sm font-medium">
+            ログアウト
+          </span>
+        </Button>
+      </div>
     </div>
   );
 }

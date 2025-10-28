@@ -31,7 +31,7 @@ const App = () => (
               <ProtectedRoute>
                 <div className="flex min-h-screen w-full">
                   <AppSidebar />
-                  <main className="ml-20 flex-1">
+                  <main className="ml-16 flex-1 bg-[#f9fafb]">
                     <Routes>
                       <Route path="/" element={<DashboardPage />} />
                       <Route path="/customers" element={<CustomersPage />} />
