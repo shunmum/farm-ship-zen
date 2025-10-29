@@ -50,6 +50,33 @@ export type Database = {
         }
         Relationships: []
       }
+      order_history: {
+        Row: {
+          action: string
+          created_at: string
+          details: string | null
+          id: string
+          order_id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          order_id: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          order_id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string

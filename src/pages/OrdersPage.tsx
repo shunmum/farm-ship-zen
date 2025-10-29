@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Edit, Printer, Clock, Package, CheckCircle2, XCircle } from "lucide-react";
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/select";
 
 const OrdersPage = () => {
+  const navigate = useNavigate();
   const { orders } = useSampleData();
   const [statusFilter, setStatusFilter] = useState("全て");
 
@@ -148,7 +150,12 @@ const OrdersPage = () => {
                       <td className="py-4">{getStatusBadge(order.status)}</td>
                       <td className="py-4">
                         <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="btn-hover">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="btn-hover"
+                            onClick={() => navigate(`/orders/${order.id}`)}
+                          >
                             詳細
                           </Button>
                           <Button variant="outline" size="sm" className="btn-hover">

@@ -9,6 +9,7 @@ import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
 import CustomersPage from "./pages/CustomersPage";
 import OrdersPage from "./pages/OrdersPage";
+import OrderDetailPage from "./pages/OrderDetailPage";
 import ShippingPage from "./pages/ShippingPage";
 import HistoryPage from "./pages/HistoryPage";
 import InvoiceBatchPage from "./pages/InvoiceBatchPage";
@@ -36,6 +37,7 @@ const App = () => (
                       <Route path="/" element={<DashboardPage />} />
                       <Route path="/customers" element={<CustomersPage />} />
                       <Route path="/orders" element={<OrdersPage />} />
+                      <Route path="/orders/:id" element={<OrderDetailPage />} />
                       <Route path="/shipping" element={<ShippingPage />} />
                       <Route path="/history" element={<HistoryPage />} />
                       <Route path="/invoices/batch" element={<InvoiceBatchPage />} />
