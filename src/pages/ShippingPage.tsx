@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,10 +12,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useSampleData } from "@/hooks/useSampleData";
-import { Printer, FileDown, ArrowRight, Truck, Box, Snowflake, Check, Package } from "lucide-react";
+import { Printer, FileDown, ArrowRight, Truck, Box, Snowflake, Check, Package, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const ShippingPage = () => {
+  const navigate = useNavigate();
   const { customers, products } = useSampleData();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedCustomer, setSelectedCustomer] = useState("");
@@ -38,9 +40,19 @@ const ShippingPage = () => {
     <div className="min-h-screen bg-background p-8 fade-in">
       <div className="mx-auto max-w-7xl space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">送り状作成</h1>
-          <p className="text-muted-foreground">配送業者の送り状を作成・印刷</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">送り状作成</h1>
+            <p className="text-muted-foreground">配送業者の送り状を作成・印刷</p>
+          </div>
+          <Button
+            onClick={() => navigate("/shipping/import")}
+            variant="outline"
+            className="gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            AI送り状作成
+          </Button>
         </div>
 
         {/* Step Progress */}

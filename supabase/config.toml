@@ -1,1 +1,4 @@
 project_id = "jzufxrvpxakdpmixqqgp"
+
+[functions.import-shipment]
+verify_jwt = false
