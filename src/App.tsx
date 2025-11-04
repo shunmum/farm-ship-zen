@@ -15,6 +15,9 @@ import ShipmentImportPage from "./pages/ShipmentImportPage";
 import HistoryPage from "./pages/HistoryPage";
 import InvoiceBatchPage from "./pages/InvoiceBatchPage";
 import SettingsPage from "./pages/SettingsPage";
+import WorkLogIndexPage from "./pages/WorkLogIndexPage";
+import WorkLogManualPage from "./pages/WorkLogManualPage";
+import WorkLogChatPage from "./pages/WorkLogChatPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +39,9 @@ const App = () => (
                   <main className="ml-16 flex-1 bg-[#f9fafb]">
                     <Routes>
                       <Route path="/" element={<DashboardPage />} />
+                      <Route path="/work-logs" element={<WorkLogIndexPage />} />
+                      <Route path="/work-logs/manual" element={<WorkLogManualPage />} />
+                      <Route path="/work-logs/chat" element={<WorkLogChatPage />} />
                       <Route path="/customers" element={<CustomersPage />} />
                       <Route path="/orders" element={<OrdersPage />} />
                       <Route path="/orders/:id" element={<OrderDetailPage />} />

@@ -2,3 +2,6 @@ project_id = "jzufxrvpxakdpmixqqgp"
 
 [functions.import-shipment]
 verify_jwt = false
+
+[functions.work-log-chat]
+verify_jwt = false

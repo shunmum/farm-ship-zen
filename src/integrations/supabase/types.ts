@@ -224,6 +224,48 @@ export type Database = {
           },
         ]
       }
+      work_logs: {
+        Row: {
+          created_at: string
+          field: string
+          harvest_items: string | null
+          id: string
+          input_type: string
+          log_date: string
+          materials_used: string | null
+          photo_url: string | null
+          updated_at: string
+          user_id: string | null
+          work_details: string
+        }
+        Insert: {
+          created_at?: string
+          field: string
+          harvest_items?: string | null
+          id?: string
+          input_type: string
+          log_date: string
+          materials_used?: string | null
+          photo_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+          work_details: string
+        }
+        Update: {
+          created_at?: string
+          field?: string
+          harvest_items?: string | null
+          id?: string
+          input_type?: string
+          log_date?: string
+          materials_used?: string | null
+          photo_url?: string | null
+          updated_at?: string
+          user_id?: string | null
+          work_details?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
