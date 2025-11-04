@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Mic, MicOff } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -24,7 +24,9 @@ const WorkLogChatPage = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,6 +35,43 @@ const WorkLogChatPage = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    // Web Speech API の初期化
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'ja-JP';
+
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('音声認識エラー:', event.error);
+        toast({
+          title: "音声認識エラー",
+          description: "音声認識に失敗しました。もう一度お試しください。",
+          variant: "destructive",
+        });
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [toast]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
@@ -126,6 +165,38 @@ const WorkLogChatPage = () => {
     }
   };
 
+  const toggleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      toast({
+        title: "音声認識未対応",
+        description: "お使いのブラウザは音声認識に対応していません。",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+        toast({
+          title: "音声入力開始",
+          description: "話してください...",
+        });
+      } catch (error) {
+        console.error('音声認識開始エラー:', error);
+        toast({
+          title: "エラー",
+          description: "音声認識を開始できませんでした。",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen p-6 bg-background">
       <div className="max-w-4xl mx-auto space-y-6">
@@ -192,13 +263,29 @@ const WorkLogChatPage = () => {
 
             {/* 入力エリア */}
             <div className="flex gap-2 pt-4 border-t">
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="メッセージを入力..."
-                disabled={isLoading || isSaving}
-              />
+              <div className="flex-1 flex gap-2">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="メッセージを入力..."
+                  disabled={isLoading || isSaving}
+                  className="flex-1"
+                />
+                <Button
+                  onClick={toggleVoiceInput}
+                  disabled={isLoading || isSaving}
+                  size="icon"
+                  variant={isListening ? "default" : "outline"}
+                  className={isListening ? "bg-red-500 hover:bg-red-600" : ""}
+                >
+                  {isListening ? (
+                    <MicOff className="h-4 w-4" />
+                  ) : (
+                    <Mic className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
               <Button
                 onClick={handleSend}
                 disabled={isLoading || !input.trim() || isSaving}
