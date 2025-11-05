@@ -1,4 +1,4 @@
-import { Home, Users, ShoppingCart, Printer, Truck, Settings, Tractor, FileText, LogOut, BookOpen } from "lucide-react";
+import { Home, Users, ShoppingCart, Printer, Truck, Settings, Tractor, FileText, LogOut, BookOpen, List } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const menuItems = [
   { title: "ダッシュボード", url: "/", icon: Home },
   { title: "作業日誌", url: "/work-logs", icon: BookOpen },
+  { title: "日誌一覧", url: "/work-logs/list", icon: List },
   { title: "顧客管理", url: "/customers", icon: Users },
   { title: "受注管理", url: "/orders", icon: ShoppingCart },
   { title: "送り状作成", url: "/shipping", icon: Printer },

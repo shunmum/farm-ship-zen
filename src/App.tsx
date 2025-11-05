@@ -18,6 +18,8 @@ import SettingsPage from "./pages/SettingsPage";
 import WorkLogIndexPage from "./pages/WorkLogIndexPage";
 import WorkLogManualPage from "./pages/WorkLogManualPage";
 import WorkLogChatPage from "./pages/WorkLogChatPage";
+import WorkLogListPage from "./pages/WorkLogListPage";
+import WorkLogDetailPage from "./pages/WorkLogDetailPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,8 @@ const App = () => (
                       <Route path="/work-logs" element={<WorkLogIndexPage />} />
                       <Route path="/work-logs/manual" element={<WorkLogManualPage />} />
                       <Route path="/work-logs/chat" element={<WorkLogChatPage />} />
+                      <Route path="/work-logs/list" element={<WorkLogListPage />} />
+                      <Route path="/work-logs/:id" element={<WorkLogDetailPage />} />
                       <Route path="/customers" element={<CustomersPage />} />
                       <Route path="/orders" element={<OrdersPage />} />
                       <Route path="/orders/:id" element={<OrderDetailPage />} />
