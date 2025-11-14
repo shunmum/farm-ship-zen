@@ -73,14 +73,14 @@ const DashboardPage = () => {
   ];
 
   return (
-    <div className="min-h-screen p-8 space-y-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">ダッシュボード</h1>
-        <p className="text-gray-600">農作物販売管理システムの概要</p>
+    <div className="min-h-screen p-4 md:p-6 lg:p-8 space-y-4 md:space-y-6">
+      <div className="mb-4 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">ダッシュボード</h1>
+        <p className="text-sm md:text-base text-gray-600">農作物販売管理システムの概要</p>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {kpiCards.map((card, index) => (
           <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
             <CardContent className="p-6">
