@@ -55,36 +55,41 @@ const WorkLogIndexPage = () => {
           </Card>
 
           {/* AIチャット入力カード */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-secondary/50">
+          <Card className="relative overflow-hidden border-2 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(139,92,246,0.2)] hover:-translate-y-1 cursor-pointer rounded-xl" style={{
+            background: 'linear-gradient(135deg, hsl(var(--ai-gradient-start)) 0%, hsl(var(--ai-gradient-end)) 100%)',
+            borderColor: 'rgba(139, 92, 246, 0.3)'
+          }}>
             <CardHeader>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-3 rounded-lg bg-secondary/10">
-                  <MessageSquare className="h-6 w-6 text-secondary" />
+                <div className="p-3 rounded-lg bg-white/10 backdrop-blur-sm">
+                  <MessageSquare className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <CardTitle>AIと会話して記録する</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-white font-semibold">
+                ✨ AIと会話して記録する
+              </CardTitle>
+              <CardDescription className="text-white/90">
                 AIとの対話形式で簡単に作業内容を記録できます
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground mb-4">
+              <ul className="space-y-2 text-sm text-white/85 mb-4">
                 <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
                   自然な会話で情報入力
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
                   AIが必要事項を質問
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-white/90" />
                   自動で情報を整理
                 </li>
               </ul>
               <Button 
-                className="w-full" 
-                variant="secondary"
+                className="w-full bg-white font-bold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_5px_20px_rgba(139,92,246,0.3)]" 
+                style={{ color: 'hsl(var(--ai-accent))' }}
                 onClick={() => navigate("/work-logs/chat")}
               >
                 AI入力を開始
