@@ -1,5 +1,15 @@
 import { useState } from "react";
 
+export interface Recipient {
+  id: string;
+  name: string;
+  address: string;
+  postalCode: string;
+  phone: string;
+  email?: string;
+  relation?: string; // 関係性（例：友人、親戚、取引先など）
+}
+
 export interface Customer {
   id: string;
   name: string;
@@ -9,15 +19,53 @@ export interface Customer {
   email: string;
   lastPurchaseDate: string;
   totalSpent: number;
+  recipients?: Recipient[]; // お届け先リスト
 }
 
+// 商品バリエーション（例：2kg, 3kg, 5kgなど）
+export interface ProductVariant {
+  id: string;
+  parentProductId: string; // 親商品ID
+  name: string; // バリエーション名（例：2kg、3個入りなど）
+  price: number;
+  size: string; // 配送サイズ（60, 80, 100, 120, 140, 160）
+  weight: number;
+  sku?: string; // 商品コード
+}
+
+// 商品マスタ（親商品）
 export interface Product {
   id: string;
-  name: string;
-  price: number;
-  size: string;
-  weight: number;
+  name: string; // 商品名（例：有機トマト）
   category: string;
+  description?: string;
+  isParent: boolean; // 親商品かどうか
+  // 親商品でない場合の単品商品データ
+  price?: number;
+  size?: string;
+  weight?: number;
+}
+
+// 配送業者
+export type ShippingCarrier = "yamato" | "sagawa" | "yupack";
+
+// 配送料金設定
+export interface ShippingRate {
+  id: string;
+  carrier: ShippingCarrier; // 配送業者
+  size: string; // サイズ（60, 80, 100, 120, 140, 160）
+  basePrice: number; // 基本料金
+  coolPrice: number; // クール便追加料金
+}
+
+// 荷合いルール（例：60サイズ×2 → 80サイズ）
+export interface ConsolidationRule {
+  id: string;
+  name: string; // ルール名
+  fromSize: string; // 元のサイズ
+  quantity: number; // 個数
+  toSize: string; // 統合後のサイズ
+  enabled: boolean; // 有効/無効
 }
 
 export interface Order {
@@ -35,6 +83,63 @@ export interface Order {
 }
 
 export const useSampleData = () => {
+  // 商品バリエーションデータ
+  const [productVariants] = useState<ProductVariant[]>([
+    // 有機トマトのバリエーション
+    { id: "PV001", parentProductId: "P001", name: "2kg", price: 1200, size: "60", weight: 2.0 },
+    { id: "PV002", parentProductId: "P001", name: "3kg", price: 1800, size: "80", weight: 3.0 },
+    { id: "PV003", parentProductId: "P001", name: "5kg", price: 2800, size: "100", weight: 5.0 },
+    // じゃがいものバリエーション
+    { id: "PV004", parentProductId: "P004", name: "3kg", price: 1500, size: "80", weight: 3.5 },
+    { id: "PV005", parentProductId: "P004", name: "5kg", price: 2500, size: "100", weight: 5.5 },
+    { id: "PV006", parentProductId: "P004", name: "10kg", price: 4500, size: "120", weight: 10.5 },
+    // みかんのバリエーション
+    { id: "PV007", parentProductId: "P010", name: "3kg", price: 1800, size: "80", weight: 3.5 },
+    { id: "PV008", parentProductId: "P010", name: "5kg", price: 3000, size: "100", weight: 5.5 },
+    { id: "PV009", parentProductId: "P010", name: "10kg", price: 5500, size: "120", weight: 10.5 },
+    // りんごのバリエーション
+    { id: "PV010", parentProductId: "P011", name: "3kg", price: 2400, size: "80", weight: 3.5 },
+    { id: "PV011", parentProductId: "P011", name: "5kg", price: 4000, size: "100", weight: 5.5 },
+    { id: "PV012", parentProductId: "P011", name: "10kg", price: 7500, size: "120", weight: 10.5 },
+    // コシヒカリのバリエーション
+    { id: "PV013", parentProductId: "P012", name: "5kg", price: 3500, size: "100", weight: 5.5 },
+    { id: "PV014", parentProductId: "P012", name: "10kg", price: 6500, size: "120", weight: 10.5 },
+    { id: "PV015", parentProductId: "P012", name: "30kg", price: 18000, size: "160", weight: 30.5 },
+  ]);
+
+  // 配送料金設定
+  const [shippingRates] = useState<ShippingRate[]>([
+    // ヤマト運輸
+    { id: "SR001", carrier: "yamato", size: "60", basePrice: 900, coolPrice: 220 },
+    { id: "SR002", carrier: "yamato", size: "80", basePrice: 1100, coolPrice: 220 },
+    { id: "SR003", carrier: "yamato", size: "100", basePrice: 1300, coolPrice: 220 },
+    { id: "SR004", carrier: "yamato", size: "120", basePrice: 1500, coolPrice: 220 },
+    { id: "SR005", carrier: "yamato", size: "140", basePrice: 1700, coolPrice: 220 },
+    { id: "SR006", carrier: "yamato", size: "160", basePrice: 1900, coolPrice: 220 },
+    // 佐川急便
+    { id: "SR007", carrier: "sagawa", size: "60", basePrice: 850, coolPrice: 200 },
+    { id: "SR008", carrier: "sagawa", size: "80", basePrice: 1050, coolPrice: 200 },
+    { id: "SR009", carrier: "sagawa", size: "100", basePrice: 1250, coolPrice: 200 },
+    { id: "SR010", carrier: "sagawa", size: "120", basePrice: 1450, coolPrice: 200 },
+    { id: "SR011", carrier: "sagawa", size: "140", basePrice: 1650, coolPrice: 200 },
+    { id: "SR012", carrier: "sagawa", size: "160", basePrice: 1850, coolPrice: 200 },
+    // ゆうパック
+    { id: "SR013", carrier: "yupack", size: "60", basePrice: 920, coolPrice: 230 },
+    { id: "SR014", carrier: "yupack", size: "80", basePrice: 1120, coolPrice: 230 },
+    { id: "SR015", carrier: "yupack", size: "100", basePrice: 1320, coolPrice: 230 },
+    { id: "SR016", carrier: "yupack", size: "120", basePrice: 1520, coolPrice: 230 },
+    { id: "SR017", carrier: "yupack", size: "140", basePrice: 1720, coolPrice: 230 },
+    { id: "SR018", carrier: "yupack", size: "160", basePrice: 1920, coolPrice: 230 },
+  ]);
+
+  // 荷合いルール
+  const [consolidationRules] = useState<ConsolidationRule[]>([
+    { id: "CR001", name: "60サイズ×2 → 80サイズ", fromSize: "60", quantity: 2, toSize: "80", enabled: true },
+    { id: "CR002", name: "60サイズ×3 → 100サイズ", fromSize: "60", quantity: 3, toSize: "100", enabled: true },
+    { id: "CR003", name: "80サイズ×2 → 120サイズ", fromSize: "80", quantity: 2, toSize: "120", enabled: true },
+    { id: "CR004", name: "100サイズ×2 → 140サイズ", fromSize: "100", quantity: 2, toSize: "140", enabled: true },
+  ]);
+
   const [customers] = useState<Customer[]>([
     {
       id: "C001",
@@ -45,6 +150,25 @@ export const useSampleData = () => {
       email: "tanaka@example.com",
       lastPurchaseDate: "2024-01-15",
       totalSpent: 125000,
+      recipients: [
+        {
+          id: "R001",
+          name: "山田 花子",
+          address: "東京都渋谷区道玄坂1-1-1",
+          postalCode: "150-0043",
+          phone: "03-1111-2222",
+          email: "yamada@example.com",
+          relation: "友人",
+        },
+        {
+          id: "R002",
+          name: "鈴木 次郎",
+          address: "神奈川県川崎市川崎区駅前本町2-2-2",
+          postalCode: "210-0007",
+          phone: "044-3333-4444",
+          relation: "親戚",
+        },
+      ],
     },
     {
       id: "C002",
@@ -55,6 +179,16 @@ export const useSampleData = () => {
       email: "sato@example.com",
       lastPurchaseDate: "2024-01-18",
       totalSpent: 98000,
+      recipients: [
+        {
+          id: "R003",
+          name: "高橋 一郎",
+          address: "埼玉県さいたま市大宮区桜木町3-3-3",
+          postalCode: "330-0854",
+          phone: "048-5555-6666",
+          relation: "取引先",
+        },
+      ],
     },
     {
       id: "C003",
@@ -139,18 +273,20 @@ export const useSampleData = () => {
   ]);
 
   const [products] = useState<Product[]>([
-    { id: "P001", name: "有機トマト", price: 1200, size: "80", weight: 1.5, category: "野菜" },
-    { id: "P002", name: "きゅうり", price: 800, size: "60", weight: 1.0, category: "野菜" },
-    { id: "P003", name: "なす", price: 900, size: "60", weight: 1.2, category: "野菜" },
-    { id: "P004", name: "じゃがいも5kg", price: 2500, size: "100", weight: 5.5, category: "野菜" },
-    { id: "P005", name: "たまねぎ3kg", price: 1800, size: "80", weight: 3.2, category: "野菜" },
-    { id: "P006", name: "にんじん", price: 700, size: "60", weight: 1.0, category: "野菜" },
-    { id: "P007", name: "キャベツ", price: 600, size: "80", weight: 1.5, category: "野菜" },
-    { id: "P008", name: "レタス", price: 500, size: "60", weight: 0.8, category: "野菜" },
-    { id: "P009", name: "いちご", price: 3500, size: "80", weight: 1.0, category: "果物" },
-    { id: "P010", name: "みかん5kg", price: 3000, size: "100", weight: 5.5, category: "果物" },
-    { id: "P011", name: "りんご5kg", price: 4000, size: "100", weight: 5.5, category: "果物" },
-    { id: "P012", name: "コシヒカリ10kg", price: 6500, size: "140", weight: 10.5, category: "米" },
+    // 親商品（バリエーションあり）
+    { id: "P001", name: "有機トマト", category: "野菜", isParent: true, description: "新鮮な有機栽培トマト" },
+    { id: "P004", name: "じゃがいも", category: "野菜", isParent: true, description: "北海道産じゃがいも" },
+    { id: "P010", name: "みかん", category: "果物", isParent: true, description: "愛媛県産みかん" },
+    { id: "P011", name: "りんご", category: "果物", isParent: true, description: "青森県産りんご" },
+    { id: "P012", name: "コシヒカリ", category: "米", isParent: true, description: "新潟県産コシヒカリ" },
+    // 単品商品（バリエーションなし）
+    { id: "P002", name: "きゅうり", category: "野菜", isParent: false, price: 800, size: "60", weight: 1.0 },
+    { id: "P003", name: "なす", category: "野菜", isParent: false, price: 900, size: "60", weight: 1.2 },
+    { id: "P005", name: "たまねぎ3kg", category: "野菜", isParent: false, price: 1800, size: "80", weight: 3.2 },
+    { id: "P006", name: "にんじん", category: "野菜", isParent: false, price: 700, size: "60", weight: 1.0 },
+    { id: "P007", name: "キャベツ", category: "野菜", isParent: false, price: 600, size: "80", weight: 1.5 },
+    { id: "P008", name: "レタス", category: "野菜", isParent: false, price: 500, size: "60", weight: 0.8 },
+    { id: "P009", name: "いちご", category: "果物", isParent: false, price: 3500, size: "80", weight: 1.0 },
   ]);
 
   const [orders] = useState<Order[]>([
@@ -444,5 +580,12 @@ export const useSampleData = () => {
     },
   ]);
 
-  return { customers, products, orders };
+  return {
+    customers,
+    products,
+    productVariants,
+    orders,
+    shippingRates,
+    consolidationRules,
+  };
 };

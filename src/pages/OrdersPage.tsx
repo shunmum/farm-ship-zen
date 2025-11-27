@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Edit, Printer, Clock, Package, CheckCircle2, XCircle } from "lucide-react";
-import { useSampleData } from "@/hooks/useSampleData";
+import { useOrders } from "@/hooks/useOrders";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -15,7 +15,7 @@ import {
 
 const OrdersPage = () => {
   const navigate = useNavigate();
-  const { orders } = useSampleData();
+  const { orders } = useOrders();
   const [statusFilter, setStatusFilter] = useState("全て");
 
   const filteredOrders =
@@ -64,25 +64,25 @@ const OrdersPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background p-8 fade-in">
-      <div className="mx-auto max-w-7xl space-y-8">
+    <div className="min-h-screen bg-background p-3 sm:p-6 lg:p-8 fade-in">
+      <div className="mx-auto max-w-7xl space-y-4 sm:space-y-6 lg:space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">受注管理</h1>
-            <p className="text-muted-foreground">受注情報の管理</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">受注管理</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">受注情報の管理</p>
           </div>
-          <Button size="lg" className="btn-hover gap-2 shadow-lg">
+          <Button size="lg" className="btn-hover gap-2 shadow-lg w-full sm:w-auto">
             <Plus className="h-5 w-5" />
             新規受注登録
           </Button>
         </div>
 
         {/* Status Summary Cards */}
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-3 sm:gap-4 grid-cols-2 md:grid-cols-4">
           {statusGroups.map((group) => (
             <Card key={group.status} className="card-hover overflow-hidden">
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className={`mb-3 inline-flex rounded-xl bg-gradient-to-br ${group.color} p-3`}>
                   {getStatusIcon(group.status)}
                 </div>
@@ -95,15 +95,15 @@ const OrdersPage = () => {
 
         {/* Orders Table */}
         <Card className="card-hover">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <CardHeader className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <CardTitle>受注一覧</CardTitle>
+                <CardTitle className="text-lg sm:text-xl">受注一覧</CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">全ての受注情報（{filteredOrders.length}件）</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 w-full sm:w-auto">
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full sm:w-[180px]">
                     <SelectValue placeholder="ステータス" />
                   </SelectTrigger>
                   <SelectContent>
@@ -117,8 +117,9 @@ const OrdersPage = () => {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
+          <CardContent className="p-0 sm:p-6">
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b text-left text-sm text-muted-foreground">
@@ -167,6 +168,58 @@ const OrdersPage = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-4 p-4">
+              {filteredOrders.map((order) => (
+                <Card key={order.id} className="p-5 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="font-semibold text-base text-gray-900 mb-1.5">{order.customerName}</div>
+                        <div className="text-sm text-gray-500 space-y-0.5">
+                          <div>{order.orderNumber}</div>
+                          <div>{order.orderDate}</div>
+                        </div>
+                      </div>
+                      {getStatusBadge(order.status)}
+                    </div>
+                    <div className="space-y-1.5 py-2">
+                      {order.products.map((p, i) => (
+                        <div key={i} className="text-sm text-gray-700 leading-relaxed">
+                          {p.productName} × {p.quantity}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between pt-3 border-t gap-4">
+                      <div>
+                        <div className="text-xs text-gray-500 mb-1">配送予定日</div>
+                        <div className="text-sm font-medium text-gray-900">{order.deliveryDate}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs text-gray-500 mb-1">金額</div>
+                        <div className="text-xl font-bold text-primary">
+                          ¥{order.amount.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 pt-3">
+                      <Button
+                        variant="outline"
+                        size="default"
+                        className="flex-1 btn-hover h-11"
+                        onClick={() => navigate(`/orders/${order.id}`)}
+                      >
+                        詳細
+                      </Button>
+                      <Button variant="outline" size="default" className="btn-hover h-11 px-4">
+                        <Printer className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>

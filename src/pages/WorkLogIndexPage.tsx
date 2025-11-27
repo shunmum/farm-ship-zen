@@ -55,10 +55,7 @@ const WorkLogIndexPage = () => {
           </Card>
 
           {/* AIチャット入力カード */}
-          <Card className="relative overflow-hidden border-2 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(139,92,246,0.2)] hover:-translate-y-1 cursor-pointer rounded-xl" style={{
-            background: 'linear-gradient(135deg, hsl(var(--ai-gradient-start)) 0%, hsl(var(--ai-gradient-end)) 100%)',
-            borderColor: 'rgba(139, 92, 246, 0.3)'
-          }}>
+          <Card className="relative overflow-hidden border-2 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(139,92,246,0.2)] hover:-translate-y-1 cursor-pointer rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 border-purple-400/30">
             <CardHeader className="p-4 md:p-6">
               <div className="flex items-center gap-2 md:gap-3 mb-2">
                 <div className="p-2 md:p-3 rounded-lg bg-white/10 backdrop-blur-sm">
@@ -87,9 +84,8 @@ const WorkLogIndexPage = () => {
                   自動で情報を整理
                 </li>
               </ul>
-              <Button 
-                className="w-full bg-white font-bold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_5px_20px_rgba(139,92,246,0.3)] text-sm md:text-base" 
-                style={{ color: 'hsl(var(--ai-accent))' }}
+              <Button
+                className="w-full bg-white hover:bg-white/90 text-purple-600 font-bold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_5px_20px_rgba(139,92,246,0.3)] text-sm md:text-base"
                 onClick={() => navigate("/work-logs/chat")}
               >
                 AI入力を開始

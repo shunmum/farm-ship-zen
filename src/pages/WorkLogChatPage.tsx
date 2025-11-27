@@ -144,7 +144,7 @@ const WorkLogChatPage = () => {
       });
 
       setTimeout(() => {
-        navigate("/work-logs");
+        navigate("/work-logs/list");
       }, 1500);
     } catch (error) {
       console.error("Error saving work log:", error);
@@ -158,7 +158,7 @@ const WorkLogChatPage = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -204,7 +204,7 @@ const WorkLogChatPage = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/work-logs")}
+            onClick={() => navigate("/work-logs/list")}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -267,7 +267,7 @@ const WorkLogChatPage = () => {
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyDown}
                   placeholder="メッセージを入力..."
                   disabled={isLoading || isSaving}
                   className="flex-1"

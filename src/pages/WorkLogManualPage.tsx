@@ -56,7 +56,7 @@ const WorkLogManualPage = () => {
         description: "作業日誌を保存しました",
       });
 
-      navigate("/work-logs");
+      navigate("/work-logs/list");
     } catch (error) {
       console.error("Error saving work log:", error);
       toast({
@@ -85,7 +85,7 @@ const WorkLogManualPage = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/work-logs")}
+            onClick={() => navigate("/work-logs/list")}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -191,7 +191,7 @@ const WorkLogManualPage = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate("/work-logs")}
+                  onClick={() => navigate("/work-logs/list")}
                   className="flex-1"
                 >
                   キャンセル

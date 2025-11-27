@@ -1,22 +1,29 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useSampleData } from "@/hooks/useSampleData";
-import { TrendingUp, Package, Users, DollarSign, ArrowUp, ArrowDown } from "lucide-react";
+import { useCustomers } from "@/hooks/useCustomers";
+import { useOrders } from "@/hooks/useOrders";
+import { TrendingUp, Users, Calendar, ArrowUp, ArrowDown, AlertCircle } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Badge } from "@/components/ui/badge";
 
 const DashboardPage = () => {
-  const { customers, orders } = useSampleData();
+  const { customers } = useCustomers();
+  const { orders } = useOrders();
 
+  const today = new Date();
   const thisMonthOrders = orders.filter(
-    (o) => new Date(o.orderDate).getMonth() === new Date().getMonth()
+    (o) => new Date(o.orderDate).getMonth() === today.getMonth()
+  );
+
+  const todayOrders = orders.filter(
+    (o) => new Date(o.orderDate).toDateString() === today.toDateString()
   );
 
   const totalSales = thisMonthOrders.reduce((sum, o) => sum + o.amount, 0);
-  const deliveryCount = thisMonthOrders.filter((o) => o.status === "発送済み" || o.status === "配達完了").length;
+  const todaySales = todayOrders.reduce((sum, o) => sum + o.amount, 0);
+  const unshippedCount = orders.filter((o) => o.status === "未発送").length;
   const newCustomers = customers.filter(
-    (c) => new Date(c.lastPurchaseDate).getMonth() === new Date().getMonth()
+    (c) => new Date(c.lastPurchaseDate).getMonth() === today.getMonth()
   ).length;
-  const avgPrice = totalSales / thisMonthOrders.length || 0;
 
   const monthlySales = [
     { month: "8月", amount: 945000 },
@@ -53,10 +60,10 @@ const DashboardPage = () => {
       icon: TrendingUp,
     },
     {
-      title: "配送完了",
-      value: `${deliveryCount}件`,
-      description: "本日: 12件",
-      icon: Package,
+      title: "未発送",
+      value: `${unshippedCount}件`,
+      description: "要対応",
+      icon: AlertCircle,
     },
     {
       title: "新規顧客",
@@ -65,10 +72,10 @@ const DashboardPage = () => {
       icon: Users,
     },
     {
-      title: "平均単価",
-      value: `¥${Math.round(avgPrice).toLocaleString()}`,
-      description: "+3%",
-      icon: DollarSign,
+      title: "今日の売上",
+      value: `¥${todaySales.toLocaleString()}`,
+      description: `${todayOrders.length}件`,
+      icon: Calendar,
     },
   ];
 
@@ -108,15 +115,15 @@ const DashboardPage = () => {
                 </div>
                 <div className={`p-3 rounded-xl ${
                   card.icon === TrendingUp ? 'bg-green-100' :
-                  card.icon === Package ? 'bg-blue-100' :
+                  card.icon === AlertCircle ? 'bg-yellow-100' :
                   card.icon === Users ? 'bg-purple-100' :
-                  'bg-orange-100'
+                  'bg-blue-100'
                 }`}>
                   <card.icon className={`h-6 w-6 ${
                     card.icon === TrendingUp ? 'text-green-600' :
-                    card.icon === Package ? 'text-blue-600' :
+                    card.icon === AlertCircle ? 'text-yellow-600' :
                     card.icon === Users ? 'text-purple-600' :
-                    'text-orange-600'
+                    'text-blue-600'
                   }`} />
                 </div>
               </div>
@@ -199,7 +206,8 @@ const DashboardPage = () => {
           <CardDescription>直近の配送状況</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
@@ -212,8 +220,8 @@ const DashboardPage = () => {
               </thead>
               <tbody>
                 {orders.slice(0, 8).map((order, index) => (
-                  <tr 
-                    key={order.id} 
+                  <tr
+                    key={order.id}
                     className="border-b border-gray-100 hover:bg-gray-50 transition-colors animate-fade-in"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
@@ -228,6 +236,33 @@ const DashboardPage = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {orders.slice(0, 8).map((order, index) => (
+              <Card
+                key={order.id}
+                className="p-4 shadow-sm hover:shadow-md transition-shadow"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="font-semibold text-gray-900">{order.customerName}</div>
+                      <div className="text-xs text-gray-500 mt-1">{order.deliveryDate}</div>
+                    </div>
+                    {getStatusBadge(order.status)}
+                  </div>
+                  <div className="text-sm text-gray-600 line-clamp-1">
+                    {order.products.map((p) => p.productName).join(", ")}
+                  </div>
+                  <div className="text-lg font-bold text-gray-900 pt-1">
+                    ¥{order.amount.toLocaleString()}
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
         </CardContent>
       </Card>
